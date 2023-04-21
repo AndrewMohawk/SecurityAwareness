@@ -3,6 +3,12 @@ Few simple/fun apps built for security awareness. Most just need flask, you can 
 
 ```pip3 install flask```
 
+To run the applications:
+
+```python3 app.py```
+
+And then browse to http://127.0.0.1:5000
+
 ## Andrews Cool Facts
 Cool fact webapp where you can influence the cookies to show admin functionality and see the session IDs exposed. 
 
