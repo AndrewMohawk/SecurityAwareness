@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600">
+    <div class="container mx-auto px-4">
+        {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline">{{ error }}</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+              <svg class="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Close</title>
+                <path d="M14.348 5.652a1 1 0 0 0-1.414 0L10 8.586 6.066 4.652a1 1 0 1 0-1.414 1.414L8.586 10l-3.934 3.934a1 1 0 1 0 1.414 1.414L10 11.414l3.934 3.934a1 1 0 1 0 1.414-1.414L11.414 10l3.934-3.934a1 1 0 0 0 0-1.414z"/>
+              </svg>
+            </span>
+          </div>
+          {% endif %}
+
+        <h1 class="text-4xl font-bold mb-6 text-white text-center pt-5">Andrew's Cool Facts</h1>
+        <div class="flex justify-between items-start py-4">
+            <div class="w-full md:w-1/4 pr-4">
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-xs">
+                  <h2 class="text-xl font-bold mb-4">User Details</h2>
+                  <div class="grid grid-cols-2 gap-1">
+                    <p class="text-sm font-bold">Logged in as:</p>
+                    <p class="text-sm">{{ username }}</p>
+                    <p class="text-sm font-bold">Admin:</p>
+                    <p class="text-sm">{{ admin == "1" }}</p>
+                    <p class="text-sm font-bold">Session:</p>
+                    
+                  </div>
+                  <p class="text-sm whitespace-pre-line break-all pb-4">{{ session }}</p>
+                  <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">Logout</a>
+                </div>
+
+                {% if admin == "1" %}
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <h2 class="text-xl font-bold mb-4">User List</h2>
+                    <ul>
+                        {% for user in users %}
+                        <li class="mb-2">{{ user[0] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            <div class="w-3/4">
+                {% if admin == "1" %}
+                <form method="post" action="{{ url_for('new_post') }}"
+                    class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <h2 class="text-xl font-bold mb-4">New Post</h2>
+                    <textarea name="post" placeholder="Write a new post..." required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32 resize-none"></textarea>
+                    <button type="submit"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">Submit</button>
+                </form>
+                {% endif %}
+
+                <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <h2 class="text-xl font-bold mb-4">Posts</h2>
+                    {% for post in posts %}
+                    <div class="post bg-gray-100 border border-gray-300 text-gray-700 px-4 py-3 rounded mb-4">
+                        {{ post|safe }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

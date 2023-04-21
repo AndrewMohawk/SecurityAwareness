@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='canvas-confetti.js') }}"></script>
+    <title>Nametag Generator</title>
+</head>
+<body>
+    <h1><a href="/" >Nametag Generator</a></h1>
+    <div class="container">
+        <div class="left">
+            <form id="csp-form" action="/" method="POST">
+                <h2>Content Security Policy</h2>
+                <label for="csp">Current Directive:</label>
+                <input type="text" id="csp" name="csp" value="{{ csp }}">
+                <button type="submit">Update CSP</button>
+                
+                <p>Example directives (click to set):</p>
+                <div class="csp-button good" id="csp-good">default-src 'self'</div>
+                <div class="csp-button bad" id="csp-bad-unsafe-inline">default-src 'self' 'unsafe-inline'</div>
+                <div class="csp-button bad" id="csp-bad-unsafe-eval">default-src 'self' 'unsafe-inline' 'unsafe-eval'</div>
+            </form>
+            <h2>Example XSS payloads (click to set):</h2>
+            <div class="xss-payload bad" id="xss-payload-1">&lt;img src="x" onerror="alert('Wombats Rule!');"&gt;</div>
+            <div class="xss-payload bad" id="xss-payload-2">&lt;script&gt;console.log('Yubikey for life! ');&lt;/script&gt;</div>
+            <div class="xss-payload bad" id="xss-payload-3">Cryptoh-no</div>
+            
+        </div>
+        <div class="right">
+            <h2>Current CSP:</h2>
+            <pre>{{ csp }}</pre>
+            <form id="name-form">
+                <label for="name">What is your name?</label>
+                <input type="text" id="name" {% if name %}value="{{ name }}"{% endif %}>
+                <button type="button" id="name-submit">Submit</button>
+              </form>              
+            {% if name %}
+            <div id="output" class="box">
+                <div class="header">
+                  <div class="hello">Hello</div>
+                  <div class="my-name-is">my name is</div>
+                </div>
+                <div class="name" id="namebox">{{ name|safe }}</div>
+                <div class="footer"></div>
+              </div>
+            {% else %}
+            <div id="output" class="box">
+                <div class="header">
+                  <div class="hello">Hello</div>
+                  <div class="my-name-is">my name is</div>
+                </div>
+                <div class="name" id="namebox"></div>
+                <div class="footer"></div>
+              </div>
+            {% endif %}
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

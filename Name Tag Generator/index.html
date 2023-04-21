@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS Demo with CSP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #f4f4f4;
+            padding: 40px;
+            border-radius: 4px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        #output {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        #cspStatus {
+            font-size: 14px;
+            color: green;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>XSS Demo with CSP</h1>
+    <label for="csp">CSP Directive:</label>
+    <input type="text" id="csp" value="default-src 'self'">
+    <button id="updateCSP">Update CSP</button>
+    <div id="cspStatus"></div>
+    <p>Example directives:</p>
+    <ul>
+        <li>default-src 'self'</li>
+        <li>default-src 'self' 'unsafe-inline'</li>
+        <li>default-src 'self' 'unsafe-inline' 'unsafe-eval'</li>
+    </ul>
+    <label for="userInput">What is your name?</label>
+    <input type="text" id="userInput">
+    <button id="displayUserInput">Submit</button>
+    <div id="output"></div>
+    <script>
+        function updateCSP2() {
+            const cspValue = document.getElementById('csp').value;
+            const metaTag = document.createElement('meta');
+            metaTag.setAttribute('http-equiv', 'Content-Security-Policy');
+            metaTag.setAttribute('content', cspValue);
+            const existingMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            if (existingMeta) {
+                document.head.removeChild(existingMeta);
+            }
+            document.head.appendChild(metaTag);
+
+            const cspStatus = document.getElementById('cspStatus');
+            cspStatus.innerText = 'CSP updated!';
+            cspStatus.style.display = 'block';
+            setTimeout(() => {
+                cspStatus.style.display = 'none';
+            }, 3000);
+        }
+
+        function updateCSP() {
+        const cspValue = document.getElementById('csp').value;
+        const scriptTag = document.createElement('script');
+        scriptTag.innerHTML = `
+            const metaTag = document.createElement('meta');
+            metaTag.setAttribute('http-equiv', 'Content-Security-Policy');
+            metaTag.setAttribute('content', '${cspValue}');
+            const existingMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            if (existingMeta) {
+                document.head.removeChild(existingMeta);
+            }
+            document.head.appendChild(metaTag);
+        `;
+        document.head.appendChild(scriptTag);
+
+        const cspStatus = document.getElementById('cspStatus');
+        cspStatus.innerText = 'CSP updated!';
+        cspStatus.style.display = 'block';
+        setTimeout(() => {
+            cspStatus.style.display = 'none';
+        }, 3000);
+    }
+
+
+        function displayUserInput() {
+            const userInput = document.getElementById('userInput').value;
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = 'Hello, ' + userInput;
+        }
+
+        document.getElementById('updateCSP').addEventListener('click', updateCSP);
+        document.getElementById('displayUserInput').addEventListener('click', displayUserInput);
+
+        updateCSP();
+    </script>
+</body>
+</html>
+
